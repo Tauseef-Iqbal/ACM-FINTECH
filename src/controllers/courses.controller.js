@@ -5,7 +5,7 @@ const {
   sendSuccessResponse,
 } = require('../utils/sendResponse');
 const DBInitializer = require('../../db/connection');
-const CourseModel = require('../utils/courses/courses.model');
+const CourseModel = require('../services/courses/courses.model');
 
 /**
  * Description of the auth module.

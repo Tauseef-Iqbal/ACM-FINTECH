@@ -5,7 +5,7 @@ const {
   sendSuccessResponse,
 } = require('../utils/sendResponse');
 const DBInitializer = require('../../db/connection');
-const UserModel = require('../utils/users/users.model');
+const UserModel = require('../services/users/users.model');
 
 /**
  * Description of the auth module.

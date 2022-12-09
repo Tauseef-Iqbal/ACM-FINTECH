@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const DBInitializer = require('../../db/connection');
 const { sendErrorResponse } = require('../utils/sendResponse');
-const UserModel = require('../utils/users/users.model');
+const UserModel = require('../services/users/users.model');
 
 /**
  * Description of the app route.

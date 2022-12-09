@@ -1,6 +1,6 @@
 const { sendErrorResponse } = require('../utils/sendResponse');
-const RoleModel = require('../utils/roles/roles.model');
-const PermissionModel = require('../utils/permissions/permissions.model');
+const RoleModel = require('../services/roles/roles.model');
+const PermissionModel = require('../services/permissions/permissions.model');
 const DBInitializer = require('../../db/connection');
 
 /**
