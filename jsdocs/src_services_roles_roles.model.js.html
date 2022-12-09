@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: db/models/users.js</title>
+    <title>JSDoc: Source: src/services/roles/roles.model.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: db/models/users.js</h1>
+    <h1 class="page-title">Source: src/services/roles/roles.model.js</h1>
 
     
 
@@ -26,91 +26,77 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const PROTECTED_ATTRIBUTES = ['password'];
-
-module.exports = function (sequelize, Model, DataTypes) {
+            <pre class="prettyprint source linenums"><code>/**
+ * ROLES MODEL
+ * @module RoleModel
+ * @return {sendErrorResponse|next}
+ */
+module.exports = class RoleModel {
   /**
-   * User Model Class.
-   * @class User @extend Model
+   *@constructor
+   * @param {object} model - The model sent to sequelize
    */
-  class User extends Model {
-    toJSON() {
-      // hide protected fields
-      const attributes = { ...this.get() };
-      for (const a of PROTECTED_ATTRIBUTES) {
-        delete attributes[a];
-      }
-      return attributes;
-    }
+  constructor(model) {
+    /**
+     * @property {object} _model - The model mapped by sequelize
+     */
+    this._model = model;
   }
-  User.init(
-    {
-      firstName: {
-        type: DataTypes.STRING,
-      },
-      lastName: {
-        type: DataTypes.STRING,
-      },
-      fullName: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return `${this.firstName} ${this.lastName}`;
-        },
-        set(value) {
-          throw new Error('Do not try to set the `fullName` value!');
-        },
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        set(value) {
-          this.setDataValue(
-            'email',
-            typeof value === 'string' ? value.toLowerCase() : value
-          );
-        },
-      },
-      password: DataTypes.STRING,
-      username: {
-        type: DataTypes.STRING,
-        set(value) {
-          this.setDataValue(
-            'username',
-            typeof value == 'string' ? value.toLowerCase() : null
-          );
-        },
-      },
-      isActive: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
-      settings: DataTypes.JSON,
-      phone: {
-        type: DataTypes.STRING,
-      },
-    },
-    { sequelize, modelName: 'User' }
-  );
 
-  User.associate = (models) => {
-    User.belongsToMany(models.Role, {
-      through: 'User_Roles',
-      as: 'roles',
-      foreignKey: 'user_id',
-    });
-    User.belongsToMany(models.Permission, {
-      through: 'User_Permissions',
-      as: 'permissions',
-      foreignKey: 'user_id',
-    });
-    User.belongsToMany(models.Course, {
-      through: 'User_Courses',
-      as: 'courses',
-      foreignKey: 'user_id',
-    });
-  };
+  /**
+   * Description of the createRole.
+   * @function createRole
+   * @param {object} role - The coming role to be assigned
+   * @return {object}
+   */
+  async createRole(role) {
+    return this._model.create(role);
+  }
 
-  return User;
+  /**
+   * Description of the createRole.
+   * @function getRoleById
+   * @param {number} id - The coming id to get a user by
+   * @param {Array} attributes - The attributes to be sent back
+   * @return {object}
+   */
+  async getRoleById(id, attributes) {
+    return this._model.findByPk(id);
+  }
+
+  /**
+   * Description of the createRole.
+   * @function getRole
+   * @param {object} where - condition on which records are fetched
+   * @param {Array} attributes - The attributes to be sent back
+   * @return {object}
+   */
+  async getRole(where, attributes) {
+    return this._model.findOne({ where, attributes });
+  }
+
+  /**
+   * Description of the createRole.
+   * @function getRoles
+   * @param {object} where - condition on which records are fetched
+   * @param {Array} attributes - The attributes to be sent back
+   * @param {object} transaction - The transaction to apply
+   * @return {object}
+   */
+  async getRoles(where = null, attributes, transaction = null) {
+    return this._model.findAll({ where, attributes, transaction });
+  }
+
+  /**
+   * Description of the createRole.
+   * @function updateRole
+   * @param {object} update - records that have to be updated
+   * @param {object} where - condition on which records are fetched
+   * @return {object}
+   */
+  async updateRole(update, where) {
+    return this._model.update(update, { where, returning: true });
+  }
 };
 </code></pre>
         </article>

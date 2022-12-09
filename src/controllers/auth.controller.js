@@ -63,8 +63,10 @@ module.exports = {
         password: hash(password),
         settings,
       });
-      // const userRole = await Role.getRole({ name: constants.ROLE_AUTHENTICATED });
-      // const result = await newUser.addRole(userRole);
+      const userRole = await Role.getRole({
+        name: constants.ROLE_AUTHENTICATED,
+      });
+      await newUser.addRole(userRole);
 
       return sendSuccessResponse(
         res,
@@ -94,10 +96,23 @@ module.exports = {
     try {
       let db = await DBInitializer();
       const User = new UserModel(db.models.User);
+      const Role = new RolesModel(db.models.Role);
       const { email, password } = req.body;
 
-      const user = await User.getUser({ email });
-
+      const attributes = {
+        exclude: ['createdAt', 'updatedAt'],
+      };
+      const include = [
+        {
+          model: db.models.Role,
+          as: 'roles',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt'],
+          },
+        },
+      ];
+      const user = await User.getUser({ email }, attributes, include);
+      console.log('>>>>>>>>>>>>>user', user.roles);
       if (!user)
         return sendErrorResponse(
           res,
@@ -120,6 +135,26 @@ module.exports = {
           'Your account has been suspended. Contact admin'
         );
       }
+
+      const userRoles = await user.getRoles();
+      if (!userRoles.length) {
+        return sendErrorResponse(
+          res,
+          401,
+          'User does not have any roles. Contact admin'
+        );
+      }
+
+      const roleToValidate = userRoles.map((role) => role.name);
+      console.log('><>>>>>>>', roleToValidate);
+
+      if (roleToValidate.includes(constants.ROLE_SUSPENDED)) {
+        return sendErrorResponse(
+          res,
+          500,
+          'Your account has been suspended. Contact admin'
+        );
+      }
       const token = jwt.sign(
         { user_id: user.id, email },
         process.env.JWT_SECRET,
@@ -129,7 +164,6 @@ module.exports = {
       );
 
       user.dataValues.token = token;
-
       return sendSuccessResponse(
         res,
         200,

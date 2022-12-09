@@ -46,6 +46,7 @@ module.exports = class UserModel {
    */
   async createUser(user) {
     const newUser = await this.model.create(user);
+    console.log('newUser:', newUser);
     return newUser;
   }
 

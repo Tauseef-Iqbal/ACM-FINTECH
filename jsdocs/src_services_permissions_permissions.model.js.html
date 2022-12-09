@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: db/models/users.js</title>
+    <title>JSDoc: Source: src/services/permissions/permissions.model.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: db/models/users.js</h1>
+    <h1 class="page-title">Source: src/services/permissions/permissions.model.js</h1>
 
     
 
@@ -26,91 +26,76 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const PROTECTED_ATTRIBUTES = ['password'];
-
-module.exports = function (sequelize, Model, DataTypes) {
+            <pre class="prettyprint source linenums"><code>/**
+ * PERMISSIONS MODEL
+ * @module PermissionModel
+ * @return {sendErrorResponse|next}
+ */
+module.exports = class PermissionModel {
   /**
-   * User Model Class.
-   * @class User @extend Model
+   *@constructor
+   * @param {object} model - The model sent to sequelize
    */
-  class User extends Model {
-    toJSON() {
-      // hide protected fields
-      const attributes = { ...this.get() };
-      for (const a of PROTECTED_ATTRIBUTES) {
-        delete attributes[a];
-      }
-      return attributes;
-    }
+  constructor(model) {
+    /**
+     * @property {object} _model - The model mapped by sequelize
+     */
+    this._model = model;
   }
-  User.init(
-    {
-      firstName: {
-        type: DataTypes.STRING,
-      },
-      lastName: {
-        type: DataTypes.STRING,
-      },
-      fullName: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return `${this.firstName} ${this.lastName}`;
-        },
-        set(value) {
-          throw new Error('Do not try to set the `fullName` value!');
-        },
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        set(value) {
-          this.setDataValue(
-            'email',
-            typeof value === 'string' ? value.toLowerCase() : value
-          );
-        },
-      },
-      password: DataTypes.STRING,
-      username: {
-        type: DataTypes.STRING,
-        set(value) {
-          this.setDataValue(
-            'username',
-            typeof value == 'string' ? value.toLowerCase() : null
-          );
-        },
-      },
-      isActive: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
-      settings: DataTypes.JSON,
-      phone: {
-        type: DataTypes.STRING,
-      },
-    },
-    { sequelize, modelName: 'User' }
-  );
 
-  User.associate = (models) => {
-    User.belongsToMany(models.Role, {
-      through: 'User_Roles',
-      as: 'roles',
-      foreignKey: 'user_id',
-    });
-    User.belongsToMany(models.Permission, {
-      through: 'User_Permissions',
-      as: 'permissions',
-      foreignKey: 'user_id',
-    });
-    User.belongsToMany(models.Course, {
-      through: 'User_Courses',
-      as: 'courses',
-      foreignKey: 'user_id',
-    });
-  };
+  /**
+   * Description of the createPermission.
+   * @function createPermission
+   * @param {object} permission - permission records to be created
+   * @return {object}
+   */
+  async createPermission(permission) {
+    return this._model.create(permission);
+  }
 
-  return User;
+  /**
+   * Description of the getPermissionById.
+   * @function getPermissionById
+   * @param {id} id - id of the permission to be retrieved
+   * @return {object}
+   */
+  async getPermissionById(id, attributes) {
+    return this._model.findByPk(id);
+  }
+
+  /**
+   * Description of the getPermission.
+   * @function getPermission
+   * @param {object} where - custom condition on which permission is to be retrieved
+   * @param {Array} attributes - attributes of the permission to be retrieved
+   * @param {Array} include - models to be included for the joins
+   * @return {object}
+   */
+  async getPermission(where, attributes, include = null) {
+    return this._model.findOne({ where, attributes, include });
+  }
+
+  /**
+   * Description of the getPermissions.
+   * @function getPermissions
+   * @param {object} where - custom condition on which permission is to be retrieved
+   * @param {Array} attributes - attributes of the permission to be retrieved
+   * @return {object}
+   */
+  async getPermissions(where = null, attributes = null) {
+    return this._model.findAll({ where, attributes });
+  }
+
+  /**
+   * Description of the updatePermission.
+   * @function updatePermission
+   * @param {object} update - permission records to be updated
+   * @param {object} where - condition on which records are updated
+   * @return {object}
+   */
+  async updatePermission(update, where) {
+    return this._model.update(update, { where, returning: true });
+  }
 };
 </code></pre>
         </article>

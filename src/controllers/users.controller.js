@@ -6,6 +6,7 @@ const {
 } = require('../utils/sendResponse');
 const DBInitializer = require('../../db/connection');
 const UserModel = require('../services/users/users.model');
+const RoleModel = require('../services/roles/roles.model');
 
 /**
  * Description of the auth module.
@@ -27,6 +28,8 @@ module.exports = {
    */
   async users(req, res) {
     try {
+      console.log('db models>>>>>>>>>>>>>>>>>>>');
+
       let db = await DBInitializer();
       const User = new UserModel(db.models.User);
       return sendSuccessResponse(
@@ -57,6 +60,9 @@ module.exports = {
     try {
       let db = await DBInitializer();
       const User = new UserModel(db.models.User);
+      const modeluser = db.models.User;
+      console.log('>>>>>>>>>', modeluser.associations);
+      const Role = new RoleModel(db.models.Role);
       const {
         email,
         password,
@@ -83,16 +89,20 @@ module.exports = {
           email: true,
         },
       };
-      let newUser = await User.createUser({
-        firstName,
-        lastName,
-        username,
-        email,
-        phone,
-        password: hash(password),
-        settings,
-        isActive,
-      });
+      let newUser = await User.createUser(
+        {
+          firstName,
+          lastName,
+          username,
+          email,
+          phone,
+          password: hash(password),
+          settings,
+          isActive,
+          courses: [{ name: 'hello' }],
+        },
+        db.models.Course
+      );
       return sendSuccessResponse(
         res,
         201,

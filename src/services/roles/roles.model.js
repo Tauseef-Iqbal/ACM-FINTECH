@@ -43,8 +43,8 @@ module.exports = class RoleModel {
    * @param {Array} attributes - The attributes to be sent back
    * @return {object}
    */
-  async getRole(where, attributes) {
-    return this._model.findOne({ where, attributes });
+  async getRole(where, attributes, include = []) {
+    return this._model.findOne({ where, attributes, include });
   }
 
   /**

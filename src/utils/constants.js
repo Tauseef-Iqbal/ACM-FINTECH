@@ -3,6 +3,7 @@ module.exports = {
   ROLE_ADMIN: 'Admin',
   ROLE_MODERATOR: 'Moderator',
   ROLE_AUTHENTICATED: 'Authenticated',
+  ROLE_SUSPENDED: 'Suspended',
 
   PERMISSION_VIEW_ADMIN_DASHBOARD: 'view-admin-dashboard',
 
