@@ -1,0 +1,480 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "ACM-FINTECH",
+    "description": "ACM-FINTECH Application API",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Users",
+      "description": "APIs for users in the system"
+    },
+    {
+      "name": "Courses",
+      "description": "APIs for courses in the system"
+    }
+  ],
+  "schemes": ["http", "https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "paths": {
+    "/api/user/create-user": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "Adding a new user to the system",
+        "description": "Adding User",
+        "operationId": "addUser",
+        "consumes": ["application/json", "application/xml"],
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User object that needs to be added to the system",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          },
+          "200": {
+            "description": "Users are fetched successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer-token": []
+          }
+        ]
+      }
+    },
+    "/api/user/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Getting all users",
+        "description": "Fetch all users in system",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Users are fetched successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer-token": []
+          }
+        ]
+      }
+    },
+    "/api/user/get-user-by-id/{id}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Getting a single user by id",
+        "description": "Fetch all users in system",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of user that we want to find",
+            "type": "integer"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User is fetched successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer-token": []
+          }
+        ]
+      }
+    },
+    "/api/user/get-user-by-email/{email}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Getting a user by email",
+        "description": "Fetch all users in system",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "description": "Email of user that we want to find",
+            "type": "string"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "User is fetched successfully",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer-token": []
+          }
+        ]
+      }
+    },
+    "/api/user/update-user": {
+      "put": {
+        "tags": ["Users"],
+        "summary": "Updating user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "updateUser",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id of the user to be updated",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid user supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "security": [
+          {
+            "Bearer-token": []
+          }
+        ]
+      }
+    },
+    "/api/user/delete-user/{id}": {
+      "delete": {
+        "tags": ["Users"],
+        "description": "Delete a user in system",
+        "summary": "Delete user with given ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of user that we want to delete",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User is deleted",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer-token": []
+          }
+        ]
+      }
+    },
+    "/api/course/create-course": {
+      "post": {
+        "tags": ["Courses"],
+        "summary": "Adding a new course to the system",
+        "description": "Adding course",
+        "operationId": "addcourse",
+        "consumes": ["application/json", "application/xml"],
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "course object that needs to be added to the system",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Course"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          },
+          "200": {
+            "description": "courses are fetched successfully",
+            "schema": {
+              "$ref": "#/definitions/Course"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer-token": []
+          }
+        ]
+      }
+    },
+    "/api/course/courses": {
+      "get": {
+        "tags": ["Courses"],
+        "summary": "Getting all courses",
+        "description": "Fetch all courses in system",
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "courses are fetched successfully",
+            "schema": {
+              "$ref": "#/definitions/Course"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer-token": []
+          }
+        ]
+      }
+    },
+    "/api/course/get-course-by-id/{id}": {
+      "get": {
+        "tags": ["Courses"],
+        "summary": "Getting a user by id",
+        "description": "Fetch all courses in system",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of course that we want to find",
+            "type": "integer"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "course is fetched successfully",
+            "schema": {
+              "$ref": "#/definitions/Course"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer-token": []
+          }
+        ]
+      }
+    },
+    "/api/course/get-course-by-name/{name}": {
+      "get": {
+        "tags": ["Courses"],
+        "summary": "Getting a user by email",
+        "description": "Fetch all courses in system",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "description": "name of course that we want to find",
+            "type": "string"
+          }
+        ],
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "course is fetched successfully",
+            "schema": {
+              "$ref": "#/definitions/Course"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer-token": []
+          }
+        ]
+      }
+    },
+    "/api/course/update-course": {
+      "put": {
+        "tags": ["Courses"],
+        "summary": "Updating course",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "updatecourse",
+        "produces": ["application/xml", "application/json"],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "description": "name of the course to be updated",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated course object",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Course"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid course supplied"
+          },
+          "404": {
+            "description": "course not found"
+          }
+        },
+        "security": [
+          {
+            "Bearer-token": []
+          }
+        ]
+      }
+    },
+    "/api/course/delete-course/{id}": {
+      "delete": {
+        "tags": ["Courses"],
+        "description": "Delete a course in system",
+        "summary": "Deleting course with given id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "ID of course that we want to delete",
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "course is deleted",
+            "schema": {
+              "$ref": "#/definitions/Course"
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer-token": []
+          }
+        ]
+      }
+    }
+  },
+  "securityDefinitions": {
+    "Bearer-token": {
+      "type": "http",
+      "name": "jwt-token",
+      "schema": "bearer",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "User": {
+      "required": ["email", "password"],
+      "properties": {
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        }
+      }
+    },
+    "Users": {
+      "type": "array",
+      "$ref": "#/definitions/User"
+    },
+    "updateUser": {
+      "type": "array",
+      "description": "User to be updated",
+      "items": {
+        "required": ["isActive"],
+        "allOf": [
+          {
+            "$ref": "#/definitions/User"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "isActive": {
+                "type": "number"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "Course": {
+      "required": ["name"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "isCompleted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "Courses": {
+      "type": "array",
+      "$ref": "#/definitions/Course"
+    },
+    "updateCourse": {
+      "type": "array",
+      "description": "User to be updated",
+      "$ref": "#/definitions/Course"
+    }
+  }
+}
