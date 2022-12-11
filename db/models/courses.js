@@ -6,6 +6,12 @@ module.exports = function (sequelize, Model, DataTypes) {
   class Course extends Model {}
   Course.init(
     {
+      id: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
       name: {
         type: DataTypes.STRING,
         set(value) {
@@ -18,6 +24,14 @@ module.exports = function (sequelize, Model, DataTypes) {
       isCompleted: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
+      },
+      instructor_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
       },
     },
     { sequelize, modelName: 'Course' }

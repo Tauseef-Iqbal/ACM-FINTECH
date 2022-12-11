@@ -18,7 +18,7 @@ async function db_initialize() {
       return true;
     });
     await ModelInitiater(sequelize, Model, DataTypes);
-    await sequelize.sync({ alter: false });
+    await sequelize.sync({ alter: true });
     const models = sequelize.models;
     Object.keys(models).forEach((key) => {
       if ('associate' in models[key]) {

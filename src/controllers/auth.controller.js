@@ -99,6 +99,13 @@ module.exports = {
       const Role = new RolesModel(db.models.Role);
       const { email, password } = req.body;
 
+      if (!email || !password) {
+        return sendErrorResponse(
+          res,
+          400,
+          'Incorrect login credentials. Kindly check and try again'
+        );
+      }
       const attributes = {
         exclude: ['createdAt', 'updatedAt'],
       };
@@ -112,7 +119,6 @@ module.exports = {
         },
       ];
       const user = await User.getUser({ email }, attributes, include);
-      console.log('>>>>>>>>>>>>>user', user.roles);
       if (!user)
         return sendErrorResponse(
           res,

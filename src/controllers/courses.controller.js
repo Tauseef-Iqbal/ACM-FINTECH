@@ -1,11 +1,11 @@
 const { Op } = require('sequelize');
-const { hash } = require('../utils/hashing');
 const {
   sendErrorResponse,
   sendSuccessResponse,
 } = require('../utils/sendResponse');
 const DBInitializer = require('../../db/connection');
 const CourseModel = require('../services/courses/courses.model');
+const UserModel = require('../services/users/users.model');
 
 /**
  * Description of the auth module.
@@ -29,10 +29,14 @@ module.exports = {
     try {
       let db = await DBInitializer();
       const Course = new CourseModel(db.models.Course);
+
+      const allCourses = await Course.getCourses({
+        instructor_id: req.user.user_id,
+      });
       return sendSuccessResponse(
         res,
         201,
-        await Course.getCourses(),
+        allCourses,
         'All registered courses'
       );
     } catch (e) {
@@ -57,7 +61,9 @@ module.exports = {
     try {
       let db = await DBInitializer();
       const Course = new CourseModel(db.models.Course);
-      const { name } = req.body;
+      const User = new UserModel(db.models.User);
+      const { name, isCompleted } = req.body;
+      const { user_id } = req.user;
       let where = {
         name,
       };
@@ -69,19 +75,16 @@ module.exports = {
           'Course with that email or phone already exists'
         );
       }
-      const settings = {
-        notification: {
-          push: true,
-          email: true,
-        },
-      };
-      let newCourse = await Course.createCourse({
+      let createdCourse = await Course.createCourse({
         name,
+        isCompleted,
+        instructor_id: user_id,
       });
+      console.log('createdCourse>>>>>>>', createdCourse);
       return sendSuccessResponse(
         res,
         201,
-        newCourse.dataValues,
+        createdCourse,
         'Course Created Successfully!'
       );
     } catch (e) {
